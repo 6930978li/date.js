@@ -1,10 +1,3 @@
-/* 
-  我们将来在开发的时候，肯定会有很多重复使用的代码
-  这些代码我们应该封装起来，以提高工作效率
-
-  怎么封装呢？
-    通常我们喜欢把方法封装到对象身上
-*/
 var kits = {};
 
 kits.dispatchZero = function (num) {
@@ -45,4 +38,58 @@ kits.getId = function(){
   // 把两个数字连起来
   let id = time + '' + r;
   return id;
+};
+//取数据的封装
+kits.getLocalDataArray=function(key){
+  let date=localStorage.getItem(key);
+  let arr=JSON.parse(date);
+  if(!arr){
+    arr=[];
+  }
+  else{
+    return arr;
+  }
+
+};
+//存数据的封装
+kits.saveLocalDataArray=function(key,arr){
+  let json=JSON.stringify(arr);
+  localStorage.setItem(key,json);
+
+
+};
+//新增数据
+kits.appendDataIntoArray=function(key,data){
+  let datas=localStorage.getItem(key);
+  datas=JSON.parse(datas);
+  datas = datas || [];
+  datas.push(data);
+  let json=JSON.stringify(datas)
+  localStorage.setItem(datas,json);
+};
+//根据ID从数组中删除一条数据的参数
+kits.deleteLocalDataById=function(key,id){
+  let datas=localStorage.getItem(key);
+  datas=JSON.parse(datas);
+  datas = datas || [];
+  datas.forEach(function(e,i){
+    if(e.id===id){
+      datas.splice(i,1);
+    }
+  });
+  let json = JSON.stringify(datas);
+   localStorage.setItem(key, json);
+};
+//根据ID修改本地存储中的指定数据的参数
+kits.modifyLocalDataById=function(key,id,data){
+  let arr=this.getLocalDataArray(key);
+  let flag=false;
+  arr.forEach(e,i=>{
+    if(e.id==id){
+      arr[i]=data;
+      flag=true;
+    }
+  })
+  this.saveLocalDataArray(key,arr);
+  return flag;
 }
